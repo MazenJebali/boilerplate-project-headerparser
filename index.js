@@ -19,6 +19,20 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+const ParseHeader = (req, res, next) => {
+  const header = req.headers;
+  req.RESULT = {
+    ipaddress: req.ip,
+    language: header["accept-language"],
+    software: header["user-agent"]
+  }
+  next();
+}
+
+app.get("/api/whoami", ParseHeader, (req, res) => {
+  res.json(req.RESULT)
+})
+
 // your first API endpoint...
 app.get('/api/hello', function (req, res) {
   res.json({ greeting: 'hello API' });
